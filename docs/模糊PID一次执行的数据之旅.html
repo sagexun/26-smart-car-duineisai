@@ -1,0 +1,99 @@
+<html style="margin:0;padding:0;">
+<title>模糊PID一次转向环执行的数据之旅</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Microsoft YaHei',system-ui,sans-serif;background:#f6f8fb;padding:16px;color:#1f2733;">
+
+  <div style="text-align:center;margin-bottom:12px;">
+    <div style="font-size:20px;font-weight:700;">一次转向环执行的数据之旅（示意）</div>
+    <div style="font-size:13px;color:#5b6b7b;margin-top:4px;">以 E=6、EC=2 为例，跟着数字从偏差一路走到左右轮差速目标。蓝色=P 支路，橙色=D 支路。</div>
+  </div>
+
+  <div style="background:#fff;border:1.5px solid #c9d4e3;border-radius:10px;padding:14px;">
+    <!-- 步骤0 -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin-bottom:10px;">
+      <div style="flex:1 1 220px;background:#eaf2fb;border:1px solid #3a7bd5;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;">① 输入（每 10ms 一次）</div>
+        <div style="font-size:14px;margin-top:4px;">image_bias = <b>6</b>（假设上一帧 = 4）<br/>EC = 6 − 4 = <b>2</b></div>
+      </div>
+      <div style="flex:1 1 220px;background:#eaf2fb;border:1px solid #3a7bd5;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;">② 限幅</div>
+        <div style="font-size:14px;margin-top:4px;">E=6（≤16 不变）<br/>EC=2（≤6 不变）<br/><span style="color:#5b6b7b;font-size:12px;">超出论域才被卡住</span></div>
+      </div>
+      <div style="flex:1 1 220px;background:#eaf2fb;border:1px solid #3a7bd5;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;">③ 档位编号（O(1) 查表）</div>
+        <div style="font-size:14px;margin-top:4px;">E_To_Index(6) = <b>4（PS）</b><br/>EC_To_Index(2) = <b>4（PS）</b></div>
+      </div>
+    </div>
+
+    <!-- 步骤3-4：规则 + 隶属度 -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin-bottom:10px;">
+      <div style="flex:1 1 280px;background:#fff;border:1.5px solid #3a7bd5;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;color:#1f4e9c;">④ 激活 4 条相邻规则（查规则表）</div>
+        <div style="font-size:14px;margin-top:4px;">
+          P 支路：Un = <b>{2, 3, 3, 4}</b>（系数下标）<br/>
+          D 支路：Un = <b>{4, 3, 3, 2}</b>（系数下标）
+        </div>
+      </div>
+      <div style="flex:1 1 280px;background:#fff;border:1.5px solid #7c3aed;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;color:#5b21b6;">⑤ 隶属度（线性插值）</div>
+        <div style="font-size:14px;margin-top:4px;">
+          E=6 在 [3,8]：μ_PS = (8−6)/5 = <b>0.4</b>，μ_PM = <b>0.6</b><br/>
+          EC=2 恰在锚点：μ_PS = <b>0</b>，μ_PM = <b>1.0</b>
+        </div>
+      </div>
+      <div style="flex:1 1 280px;background:#fff;border:1.5px solid #059669;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;color:#065f46;">⑥ 取小 AND → 激活强度</div>
+        <div style="font-size:14px;margin-top:4px;">
+          UF = {min(0.4,0), min(0.6,0), min(0.4,1), min(0.6,1)}<br/>
+          = <b>{0, 0, 0.4, 0.6}</b><br/>
+          <span style="color:#5b6b7b;font-size:12px;">EC 只属于 PM → 插值完全由 E 提供</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤6-7：系数 -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin-bottom:10px;">
+      <div style="flex:1 1 300px;background:#eaf7ee;border:1.5px solid #3d9c5a;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;color:#1e6b37;">⑦ 加权平均 → 增益系数</div>
+        <div style="font-size:14px;margin-top:4px;">
+          P 系数 = (0.4×1.03 + 0.6×1.10)/1.0 = <b>1.07</b><br/>
+          D 系数 = (0.4×1.03 + 0.6×0.98)/1.0 = <b>1.00</b>
+        </div>
+      </div>
+      <div style="flex:1 1 300px;background:#eaf7ee;border:1.5px solid #3d9c5a;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;color:#1e6b37;">⑧ 基础值 × 系数 → Kp/Kd</div>
+        <div style="font-size:14px;margin-top:4px;">
+          Kp = 1.52 × 1.07 = <b>1.63</b><br/>
+          Kd = 10.4 × 1.00 = <b>10.4</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤8-9：PD 合成 + 差速 -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin-bottom:10px;">
+      <div style="flex:1 1 300px;background:#fff7e6;border:1.5px solid #e8a020;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;color:#92400e;">⑨ PD 合成 → 转向强度</div>
+        <div style="font-size:14px;margin-top:4px;">
+          ec = Limit(2, ±3) = <b>2</b><br/>
+          Kp·E = 1.63×6 = <b>9.76</b>，Kd·EC = 10.4×2 = <b>20.8</b><br/>
+          pid_val = (9.76 + 20.8) / 20 = <b>1.53</b>（&gt;0 → 左转）
+        </div>
+      </div>
+      <div style="flex:1 1 380px;background:#fee2e2;border:1.5px solid #dc2626;border-radius:8px;padding:8px 10px;">
+        <div style="font-weight:700;color:#991b1b;">⑩ 差速分配（pid_val=1.53 &gt; 0 → 左转分支）</div>
+        <div style="font-size:14px;margin-top:4px;">
+          左轮 = (1 − 1.53×0.95) × B = <b>−0.45B → 钳到 0</b><br/>
+          右轮 = (1 + 1.53×0.10) × B = <b>1.15B</b>（提速 15%）
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤10 -->
+    <div style="background:#fff4f0;border:1.5px solid #d96b3a;border-radius:8px;padding:8px 10px;">
+      <div style="font-weight:700;color:#b34a1f;">⑪ 交给速度环（2ms）：左轮目标 0，右轮目标 1.15B</div>
+      <div style="font-size:14px;margin-top:4px;">左轮停转、右轮加速 → 车头急往左拐。偏差越大 pid_val 越大 → 转弯越狠，这套逻辑自动完成"偏差越大打得越猛"。</div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;color:#8a97a5;margin-top:10px;text-align:center;">数值按 FuzzyPID.cpp 与 Motor.cpp 的实际公式手算复现（基础 Kp=1.52 / Kd=10.4）。示意结构，示例数据标注明确。</div>
+</div>
+</html>

@@ -1,0 +1,116 @@
+<html style="margin:0;padding:0;">
+<title>模糊PID隶属度函数与输入值隶属度计算</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Microsoft YaHei',system-ui,sans-serif;background:#f6f8fb;padding:16px;color:#1f2733;">
+
+  <div style="text-align:center;margin-bottom:12px;">
+    <div style="font-size:20px;font-weight:700;">隶属度函数：输入值如何变成"属于某个语言值的程度"（示意）</div>
+    <div style="font-size:13px;color:#5b6b7b;margin-top:4px;">7 个语言值 = 7 个三角隶属函数，锚点在论域边界上。任一输入点只与相邻两个三角形相交，两个隶属度之和恒为 1。</div>
+  </div>
+
+  <!-- E 论域 -->
+  <div style="background:#fff;border:1.5px solid #c9d4e3;border-radius:10px;padding:12px;margin-bottom:12px;">
+    <div style="font-weight:700;font-size:15px;margin-bottom:6px;">E 论域（偏差，±16）：E=6 → μ_PS=0.4，μ_PM=0.6</div>
+    <svg viewBox="0 0 960 400" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="'Microsoft YaHei',sans-serif">
+      <!-- 三角形 -->
+      <polygon points="30,50 50,50 265,320 30,320" fill="#93c5fd" fill-opacity="0.55" stroke="#3b82f6" stroke-width="1.5"/>
+      <polygon points="50,320 265,50 399.4,320" fill="#60a5fa" fill-opacity="0.55" stroke="#3b82f6" stroke-width="1.5"/>
+      <polygon points="265,320 399.4,50 480,320" fill="#38bdf8" fill-opacity="0.55" stroke="#0284c7" stroke-width="1.5"/>
+      <polygon points="399.4,320 480,50 560.6,320" fill="#34d399" fill-opacity="0.55" stroke="#059669" stroke-width="1.5"/>
+      <polygon points="480,320 560.6,50 695,320" fill="#fbbf24" fill-opacity="0.55" stroke="#d97706" stroke-width="1.5"/>
+      <polygon points="560.6,320 695,50 910,320" fill="#fb923c" fill-opacity="0.55" stroke="#ea580c" stroke-width="1.5"/>
+      <polygon points="695,320 910,50 930,50 930,320" fill="#ef4444" fill-opacity="0.55" stroke="#dc2626" stroke-width="1.5"/>
+      <!-- 语言值标签 -->
+      <text x="14" y="30" font-size="14" font-weight="700" fill="#1f2733">NB</text>
+      <text x="265" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">NM</text>
+      <text x="399.4" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">NS</text>
+      <text x="480" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">ZO</text>
+      <text x="560.6" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">PS</text>
+      <text x="695" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">PM</text>
+      <text x="930" y="30" font-size="14" font-weight="700" fill="#1f2733" text-anchor="end">PB</text>
+      <!-- 高亮 E=6 -->
+      <line x1="641.25" y1="50" x2="641.25" y2="320" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,4"/>
+      <circle cx="641.25" cy="212" r="5" fill="#dc2626"/>
+      <circle cx="641.25" cy="158" r="5" fill="#ea580c"/>
+      <text x="648" y="205" font-size="13" fill="#dc2626" font-weight="700">μ_PS = 0.4</text>
+      <text x="648" y="150" font-size="13" fill="#ea580c" font-weight="700">μ_PM = 0.6</text>
+      <!-- 高亮 E=0 -->
+      <line x1="480" y1="50" x2="480" y2="320" stroke="#059669" stroke-width="1.2" stroke-dasharray="3,3"/>
+      <circle cx="480" cy="50" r="5" fill="#059669"/>
+      <text x="487" y="78" font-size="12" fill="#059669" font-weight="700">E=0 → μ_ZO = 1.0（恰在锚点）</text>
+      <!-- 坐标轴 -->
+      <line x1="30" y1="320" x2="930" y2="320" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="16" y="312" font-size="12" fill="#5b6b7b">μ</text>
+      <line x1="50" y1="320" x2="50" y2="326" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="50" y="342" font-size="12" fill="#5b6b7b" text-anchor="middle">-16</text>
+      <line x1="265" y1="320" x2="265" y2="326" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="265" y="342" font-size="12" fill="#5b6b7b" text-anchor="middle">-8</text>
+      <line x1="399.4" y1="320" x2="399.4" y2="326" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="399.4" y="342" font-size="12" fill="#5b6b7b" text-anchor="middle">-3</text>
+      <line x1="480" y1="320" x2="480" y2="326" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="480" y="342" font-size="12" fill="#5b6b7b" text-anchor="middle">0</text>
+      <line x1="560.6" y1="320" x2="560.6" y2="326" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="560.6" y="342" font-size="12" fill="#5b6b7b" text-anchor="middle">3</text>
+      <line x1="695" y1="320" x2="695" y2="326" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="695" y="342" font-size="12" fill="#5b6b7b" text-anchor="middle">8</text>
+      <line x1="910" y1="320" x2="910" y2="326" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="910" y="342" font-size="12" fill="#5b6b7b" text-anchor="middle">16</text>
+      <text x="480" y="368" font-size="12" fill="#8a97a5" text-anchor="middle">E 论域（锚点 = 边界位置，±16 外饱和）</text>
+    </svg>
+  </div>
+
+  <!-- EC 论域 -->
+  <div style="background:#fff;border:1.5px solid #c9d4e3;border-radius:10px;padding:12px;margin-bottom:12px;">
+    <div style="font-weight:700;font-size:15px;margin-bottom:6px;">EC 论域（偏差变化率，±6）：EC=2 → μ_PM=1.0（恰在锚点，EC 不再参与插值）</div>
+    <svg viewBox="0 0 960 270" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="'Microsoft YaHei',sans-serif">
+      <polygon points="30,50 50,50 336.7,200 30,200" fill="#93c5fd" fill-opacity="0.55" stroke="#3b82f6" stroke-width="1.5"/>
+      <polygon points="50,200 336.7,50 394,200" fill="#60a5fa" fill-opacity="0.55" stroke="#3b82f6" stroke-width="1.5"/>
+      <polygon points="336.7,200 394,50 480,200" fill="#38bdf8" fill-opacity="0.55" stroke="#0284c7" stroke-width="1.5"/>
+      <polygon points="394,200 480,50 566,200" fill="#34d399" fill-opacity="0.55" stroke="#059669" stroke-width="1.5"/>
+      <polygon points="480,200 566,50 623.3,200" fill="#fbbf24" fill-opacity="0.55" stroke="#d97706" stroke-width="1.5"/>
+      <polygon points="566,200 623.3,50 910,200" fill="#fb923c" fill-opacity="0.55" stroke="#ea580c" stroke-width="1.5"/>
+      <polygon points="623.3,200 910,50 930,50 930,200" fill="#ef4444" fill-opacity="0.55" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="14" y="30" font-size="14" font-weight="700" fill="#1f2733">NB</text>
+      <text x="336.7" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">NM</text>
+      <text x="394" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">NS</text>
+      <text x="480" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">ZO</text>
+      <text x="566" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">PS</text>
+      <text x="623.3" y="36" font-size="14" font-weight="700" fill="#1f2733" text-anchor="middle">PM</text>
+      <text x="930" y="30" font-size="14" font-weight="700" fill="#1f2733" text-anchor="end">PB</text>
+      <line x1="623.3" y1="50" x2="623.3" y2="200" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="5,4"/>
+      <circle cx="623.3" cy="50" r="5" fill="#ea580c"/>
+      <text x="630" y="88" font-size="13" fill="#ea580c" font-weight="700">EC=2 → μ_PM = 1.0</text>
+      <line x1="30" y1="200" x2="930" y2="200" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="16" y="192" font-size="12" fill="#5b6b7b">μ</text>
+      <line x1="50" y1="200" x2="50" y2="206" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="50" y="222" font-size="12" fill="#5b6b7b" text-anchor="middle">-6</text>
+      <line x1="336.7" y1="200" x2="336.7" y2="206" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="336.7" y="222" font-size="12" fill="#5b6b7b" text-anchor="middle">-2</text>
+      <line x1="394" y1="200" x2="394" y2="206" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="394" y="222" font-size="12" fill="#5b6b7b" text-anchor="middle">-1.2</text>
+      <line x1="480" y1="200" x2="480" y2="206" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="480" y="222" font-size="12" fill="#5b6b7b" text-anchor="middle">0</text>
+      <line x1="566" y1="200" x2="566" y2="206" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="566" y="222" font-size="12" fill="#5b6b7b" text-anchor="middle">1.2</text>
+      <line x1="623.3" y1="200" x2="623.3" y2="206" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="623.3" y="222" font-size="12" fill="#5b6b7b" text-anchor="middle">2</text>
+      <line x1="910" y1="200" x2="910" y2="206" stroke="#5b6b7b" stroke-width="1.5"/>
+      <text x="910" y="222" font-size="12" fill="#5b6b7b" text-anchor="middle">6</text>
+      <text x="480" y="248" font-size="12" fill="#8a97a5" text-anchor="middle">EC 论域：零点附近（±1.2）三角形更窄 → 直道小偏差时隶属度分辨率更高</text>
+    </svg>
+  </div>
+
+  <!-- 工作示例 -->
+  <div style="background:#fff7e6;border:1.5px solid #e8a020;border-radius:10px;padding:12px;">
+    <div style="font-weight:700;font-size:15px;margin-bottom:6px;">完整工作示例（E=6, EC=2）—— 隶属度 → 规则激活强度 → 增益系数</div>
+    <div style="font-size:14px;line-height:1.9;">
+      ① <b>E=6</b> 落在区间 [3, 8]：<b>μ_PS = (8-6)/(8-3) = 0.4</b>，<b>μ_PM = 1-0.4 = 0.6</b>；<br/>
+      ② <b>EC=2</b> 恰在锚点 2：<b>μ_PS = 0</b>，<b>μ_PM = 1.0</b>（只属于 PM）；<br/>
+      ③ E×EC 配对激活 4 条规则，激活强度取小：UF = {min(0.4,0), min(0.6,0), min(0.4,1), min(0.6,1)} = <b>{0, 0, 0.4, 0.6}</b>；<br/>
+      ④ 加权平均（只算非零）：P 系数 = (0.4×1.03 + 0.6×1.10)/1.0 = <b>1.07</b>，D 系数 = (0.4×1.03 + 0.6×0.98)/1.0 = <b>1.00</b>。<br/>
+      <span style="color:#5b6b7b;">要点：EC 恰在锚点时只贡献 1 条语言值，插值完全由 E 提供——这就是"相邻区间线性插值"的实际效果。</span>
+    </div>
+  </div>
+
+  <div style="font-size:12px;color:#8a97a5;margin-top:10px;text-align:center;">几何与数值按 FuzzyPID.cpp 的 E_BOUNDARIES / EC_BOUNDARIES 与 Fuzzy_Adjust 公式绘制，示例数据标注明确。示意结构，非精确测量。</div>
+</div>
+</html>

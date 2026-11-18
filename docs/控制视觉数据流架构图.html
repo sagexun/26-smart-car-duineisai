@@ -1,0 +1,59 @@
+<html style="margin:0;padding:0;">
+<title>霹雳火2026 控制-视觉数据流与双闭环架构</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Microsoft YaHei',system-ui,sans-serif;background:#f6f8fb;padding:16px;color:#1f2733;">
+
+  <div style="text-align:center;margin-bottom:14px;">
+    <div style="font-size:20px;font-weight:700;">霹雳火2026 · 控制—视觉数据流与双闭环架构（示意）</div>
+    <div style="font-size:13px;color:#5b6b7b;margin-top:4px;">视觉队友负责左侧，最终交付一个偏差 image_bias；你（控制）负责右侧：转向环算差速、速度环追速度。TC264 落地同构。</div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:stretch;">
+
+    <!-- 视觉侧 -->
+    <div style="flex:1 1 260px;min-width:250px;background:#eaf2fb;border:1.5px solid #3a7bd5;border-radius:10px;padding:10px 12px;">
+      <div style="font-weight:700;color:#1f4e9c;font-size:15px;margin-bottom:6px;">① 视觉侧（队友）</div>
+      <div style="background:#fff;border:1px solid #c4d6f0;border-radius:6px;padding:6px 8px;font-size:14px;margin:5px 0;">摄像头 320×240</div>
+      <div style="text-align:center;color:#3a7bd5;font-size:13px;">↓</div>
+      <div style="background:#fff;border:1px solid #c4d6f0;border-radius:6px;padding:6px 8px;font-size:14px;margin:5px 0;">缩放160×120灰度<br/>迷宫法扫线 → 左右边线</div>
+      <div style="text-align:center;color:#3a7bd5;font-size:13px;">↓</div>
+      <div style="background:#fff;border:1px solid #c4d6f0;border-radius:6px;padding:6px 8px;font-size:14px;margin:5px 0;">逆透视(IPS) + 滤波 + 等距采样</div>
+      <div style="text-align:center;color:#3a7bd5;font-size:13px;">↓</div>
+      <div style="background:#fff;border:1px solid #c4d6f0;border-radius:6px;padding:6px 8px;font-size:14px;margin:5px 0;">左右中线 center_line<br/>（边线向内平移半车宽）</div>
+      <div style="text-align:center;color:#3a7bd5;font-size:13px;">↓ 预瞄点(0.55m)纯跟踪</div>
+      <div style="background:#fff7e6;border:1.5px solid #e8a020;border-radius:6px;padding:7px 8px;font-size:14px;margin:5px 0;font-weight:700;">image_bias（±20）<br/><span style="font-weight:400;font-size:12px;">&gt;0 需左转 / &lt;0 需右转</span></div>
+      <div style="background:#fff;border:1px solid #c4d6f0;border-radius:6px;padding:6px 8px;font-size:14px;margin:5px 0;">元素识别<br/>element_flag / 边线点数 / stop_request</div>
+    </div>
+
+    <!-- 接口 -->
+    <div style="flex:1 1 190px;min-width:180px;background:#fdf3f3;border:1.5px dashed #c0504d;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-weight:700;color:#a03a3a;font-size:15px;margin-bottom:6px;text-align:center;">② 接口契约（全局变量·每帧）</div>
+      <div style="background:#fff;border:1px solid #ecc8c6;border-radius:6px;padding:6px 8px;font-size:13px;margin:4px 0;text-align:center;">image_bias &nbsp;int16 ±20</div>
+      <div style="background:#fff;border:1px solid #ecc8c6;border-radius:6px;padding:6px 8px;font-size:13px;margin:4px 0;text-align:center;">left/right_line_count 丢线判据</div>
+      <div style="background:#fff;border:1px solid #ecc8c6;border-radius:6px;padding:6px 8px;font-size:13px;margin:4px 0;text-align:center;">element_flag 元素类型</div>
+      <div style="background:#fff;border:1px solid #ecc8c6;border-radius:6px;padding:6px 8px;font-size:13px;margin:4px 0;text-align:center;">stop_request 停车请求</div>
+      <div style="font-size:12px;color:#a03a3a;text-align:center;margin-top:6px;">同一帧打包读出，符号以实车为准</div>
+    </div>
+
+    <!-- 控制侧 -->
+    <div style="flex:1 1 300px;min-width:280px;background:#eaf7ee;border:1.5px solid #3d9c5a;border-radius:10px;padding:10px 12px;">
+      <div style="font-weight:700;color:#1e6b37;font-size:15px;margin-bottom:6px;">③ 控制侧（你 · TC264）</div>
+      <div style="background:#fff;border:1px solid #bfe3c8;border-radius:6px;padding:6px 8px;font-size:14px;margin:5px 0;">速度决策 base_speed<br/><span style="font-size:12px;color:#5b6b7b;">按 element_flag 加减速 + S曲线平滑</span></div>
+      <div style="text-align:center;color:#3d9c5a;font-size:13px;">↓</div>
+      <div style="background:#fff;border:1.5px solid #3d9c5a;border-radius:6px;padding:7px 8px;font-size:14px;margin:5px 0;font-weight:700;">转向环 10ms（外环）<br/><span style="font-weight:400;font-size:12px;">模糊PD(image_bias) → 差速目标 encoder_L/R_wish</span></div>
+      <div style="text-align:center;color:#3d9c5a;font-size:13px;">↓</div>
+      <div style="background:#fff;border:1.5px solid #3d9c5a;border-radius:6px;padding:7px 8px;font-size:14px;margin:5px 0;font-weight:700;">速度环 2ms（内环）<br/><span style="font-weight:400;font-size:12px;">增量式PI(编码器实际 vs 目标) → PWM</span></div>
+      <div style="text-align:center;color:#3d9c5a;font-size:13px;">↓</div>
+      <div style="background:#fff;border:1px solid #bfe3c8;border-radius:6px;padding:6px 8px;font-size:14px;margin:5px 0;">电机 PWM 输出（正反转分通道）</div>
+      <div style="text-align:center;color:#3d9c5a;font-size:12px;margin-top:2px;">◄──── 编码器计数反馈（二阶滤波） ────┘</div>
+    </div>
+  </div>
+
+  <!-- 安全保护 -->
+  <div style="margin-top:12px;background:#fff4f0;border:1.5px solid #d96b3a;border-radius:10px;padding:10px 12px;">
+    <div style="font-weight:700;color:#b34a1f;font-size:15px;">④ 安全兜底（控制侧独立，不依赖视觉）</div>
+    <div style="font-size:14px;margin-top:4px;">红色起跑块检测 → 才发车 · 出界保护 / stop_request → 立即停车 · Rush_time 超时停车 · 停车时 PWM 清零、关负压</div>
+  </div>
+
+  <div style="font-size:12px;color:#8a97a5;margin-top:10px;text-align:center;">示意结构：仅表达数据流与环路关系，非精确测量。详细代码位置见《霹雳火2026工程思路解读与TC264控制视觉分工指南》。</div>
+</div>
+</html>

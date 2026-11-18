@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TC264 双定时器中断执行时序分析</title>
+<style>
+  html,body{margin:0;padding:0;background:#fff;}
+  body{font-family:"Microsoft YaHei",system-ui,-apple-system,"Segoe UI",sans-serif;color:#222;padding:18px 16px 28px;box-sizing:border-box;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  h1{font-size:20px;margin:6px 0 2px;}
+  .sub{font-size:13px;color:#666;margin:0 0 12px;}
+  svg{width:100%;height:auto;display:block;border:1px solid #eee;border-radius:8px;background:#fff;}
+  .notes{margin-top:14px;line-height:1.7;}
+  .notes h3{font-size:15px;margin:14px 0 6px;}
+  .notes ul{margin:4px 0 8px;padding-left:20px;}
+  .notes li{margin:3px 0;font-size:14px;}
+  .tag{display:inline-block;font-weight:700;color:#0E7C7B;}
+  .tag2{display:inline-block;font-weight:700;color:#E8833A;}
+  .warn{color:#B03030;}
+  .alt{background:#F6F6F3;border:1px solid #e0e0da;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TC264 双定时器中断执行时序（示意）</h1>
+  <p class="sub">两个 ISR 均挂在核 0（IFX_INTERRUPT 第 2 参数 = 0）→ 单核串行 + 嵌套抢占；图中 ISR 块宽度为示意，假设单次执行约 1ms，真实耗时取决于函数体。</p>
+
+  <svg viewBox="0 0 1220 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TC264中断执行时序图">
+    <title>TC264：两个 CCU6 定时器中断在核 0 上的执行时序（示意）</title>
+
+    <!-- 标题 -->
+    <text x="110" y="24" font-size="16" font-weight="700" fill="#222">核 0（CPU0）执行序列 —— 5ms 扫描中断与 10ms 控制中断</text>
+
+    <!-- 网格线（每 5ms） -->
+    <g stroke="#EDEDED">
+      <line x1="110" y1="40" x2="110" y2="320"/>
+      <line x1="240" y1="40" x2="240" y2="320"/>
+      <line x1="370" y1="40" x2="370" y2="320"/>
+      <line x1="500" y1="40" x2="500" y2="320"/>
+      <line x1="630" y1="40" x2="630" y2="320"/>
+      <line x1="760" y1="40" x2="760" y2="320"/>
+      <line x1="890" y1="40" x2="890" y2="320"/>
+      <line x1="1020" y1="40" x2="1020" y2="320"/>
+      <line x1="1150" y1="40" x2="1150" y2="320"/>
+    </g>
+
+    <!-- 碰撞点（10ms 整数倍） -->
+    <g stroke="#D33" stroke-dasharray="4,3">
+      <line x1="110" y1="40" x2="110" y2="300"/>
+      <line x1="370" y1="40" x2="370" y2="300"/>
+      <line x1="630" y1="40" x2="630" y2="300"/>
+      <line x1="890" y1="40" x2="890" y2="300"/>
+      <line x1="1150" y1="40" x2="1150" y2="300"/>
+    </g>
+    <g font-size="12" fill="#B03030" text-anchor="middle">
+      <text x="110" y="32">碰撞</text>
+      <text x="370" y="32">碰撞</text>
+      <text x="630" y="32">碰撞</text>
+      <text x="890" y="32">碰撞</text>
+      <text x="1150" y="32">碰撞</text>
+    </g>
+
+    <!-- 泳道 1：CH0 请求 -->
+    <text x="8" y="47" font-size="12.5" fill="#333">CCU6_CH0 定时请求</text>
+    <text x="8" y="63" font-size="12.5" fill="#888">（5ms 周期）</text>
+    <g fill="#0E7C7B">
+      <path d="M 103,52 L 110,45 L 117,52 L 110,59 Z"/>
+      <path d="M 233,52 L 240,45 L 247,52 L 240,59 Z"/>
+      <path d="M 363,52 L 370,45 L 377,52 L 370,59 Z"/>
+      <path d="M 493,52 L 500,45 L 507,52 L 500,59 Z"/>
+      <path d="M 623,52 L 630,45 L 637,52 L 630,59 Z"/>
+      <path d="M 753,52 L 760,45 L 767,52 L 760,59 Z"/>
+      <path d="M 883,52 L 890,45 L 897,52 L 890,59 Z"/>
+      <path d="M 1013,52 L 1020,45 L 1027,52 L 1020,59 Z"/>
+      <path d="M 1143,52 L 1150,45 L 1157,52 L 1150,59 Z"/>
+    </g>
+
+    <!-- 泳道 2：CH1 请求 -->
+    <text x="8" y="137" font-size="12.5" fill="#333">CCU6_CH1 定时请求</text>
+    <text x="8" y="153" font-size="12.5" fill="#888">（10ms 周期）</text>
+    <g fill="#E8833A">
+      <path d="M 103,142 L 110,135 L 117,142 L 110,149 Z"/>
+      <path d="M 363,142 L 370,135 L 377,142 L 370,149 Z"/>
+      <path d="M 623,142 L 630,135 L 637,142 L 630,149 Z"/>
+      <path d="M 883,142 L 890,135 L 897,142 L 890,149 Z"/>
+      <path d="M 1143,142 L 1150,135 L 1157,142 L 1150,149 Z"/>
+    </g>
+
+    <!-- 泳道 3：核 0 执行 -->
+    <text x="8" y="250" font-size="12.5" fill="#333">核 0（CPU0）执行</text>
+    <text x="8" y="266" font-size="12.5" fill="#888">串行 + 可嵌套</text>
+    <rect x="110" y="230" width="1040" height="60" fill="#F4F4F1" stroke="#C9C9C4"/>
+
+    <!-- CH1 外层块（橙色） -->
+    <g fill="#E8833A">
+      <rect x="110" y="232" width="26" height="52" rx="3"/>
+      <rect x="370" y="232" width="26" height="52" rx="3"/>
+      <rect x="630" y="232" width="26" height="52" rx="3"/>
+      <rect x="890" y="232" width="26" height="52" rx="3"/>
+      <rect x="1150" y="232" width="26" height="52" rx="3"/>
+    </g>
+    <!-- CH0 内层/独立块（青色） -->
+    <g fill="#0E7C7B">
+      <rect x="114" y="248" width="18" height="22" rx="2"/>
+      <rect x="240" y="254" width="26" height="22" rx="2"/>
+      <rect x="374" y="248" width="18" height="22" rx="2"/>
+      <rect x="500" y="254" width="26" height="22" rx="2"/>
+      <rect x="634" y="248" width="18" height="22" rx="2"/>
+      <rect x="760" y="254" width="26" height="22" rx="2"/>
+      <rect x="894" y="248" width="18" height="22" rx="2"/>
+      <rect x="1020" y="254" width="26" height="22" rx="2"/>
+      <rect x="1154" y="248" width="18" height="22" rx="2"/>
+    </g>
+    <!-- 主循环标注 -->
+    <text x="112" y="305" font-size="12" fill="#999">主循环（main loop）在 ISR 间隙执行；碰撞时刻 ISR 嵌套执行、互不并行</text>
+
+    <!-- 嵌套标注（t=0 处） -->
+    <text x="110" y="220" font-size="12" fill="#B03030">嵌套：高优先级先入 → 另一中断立即抢占 → 先跑完者先返回</text>
+
+    <!-- 时间轴 -->
+    <line x1="110" y1="320" x2="1150" y2="320" stroke="#555"/>
+    <g stroke="#555">
+      <line x1="110" y1="320" x2="110" y2="327"/>
+      <line x1="240" y1="320" x2="240" y2="327"/>
+      <line x1="370" y1="320" x2="370" y2="327"/>
+      <line x1="500" y1="320" x2="500" y2="327"/>
+      <line x1="630" y1="320" x2="630" y2="327"/>
+      <line x1="760" y1="320" x2="760" y2="327"/>
+      <line x1="890" y1="320" x2="890" y2="327"/>
+      <line x1="1020" y1="320" x2="1020" y2="327"/>
+      <line x1="1150" y1="320" x2="1150" y2="327"/>
+    </g>
+    <g font-size="12.5" fill="#444" text-anchor="middle">
+      <text x="110" y="344">0ms</text>
+      <text x="240" y="344">5ms</text>
+      <text x="370" y="344">10ms</text>
+      <text x="500" y="344">15ms</text>
+      <text x="630" y="344">20ms</text>
+      <text x="760" y="344">25ms</text>
+      <text x="890" y="344">30ms</text>
+      <text x="1020" y="344">35ms</text>
+      <text x="1150" y="344">40ms</text>
+    </g>
+
+    <!-- 图例 -->
+    <rect x="110" y="366" width="14" height="14" fill="#0E7C7B"/>
+    <text x="132" y="379" font-size="13" fill="#333">CCU6_CH0 ISR（5ms：key_scanner → Encoder_Data_get → car_start）</text>
+    <rect x="110" y="396" width="14" height="14" fill="#E8833A"/>
+    <text x="132" y="409" font-size="13" fill="#333">CCU6_CH1 ISR（10ms：pid_tuning_tick → Turn_PID_Control）</text>
+    <rect x="110" y="424" width="26" height="14" fill="#F4F4F1" stroke="#999"/>
+    <text x="144" y="437" font-size="13" fill="#333">主循环（ISR 间隙执行）</text>
+    <line x1="470" y1="431" x2="496" y2="431" stroke="#D33" stroke-dasharray="4,3"/>
+    <text x="504" y="437" font-size="13" fill="#333">碰撞点：两中断请求同时到达（10ms 整数倍）</text>
+  </svg>
+
+  <div class="notes">
+    <h3>关键结论</h3>
+    <ul>
+      <li><span class="tag">不是并行执行</span>：<code>IFX_INTERRUPT(名字, 0, 优先级)</code> 第 2 个参数是核 ID，两个 ISR 都写在 0 → 都挂在 CPU0。单核同一时刻只能执行一条指令流，两个 ISR 只能“排队 + 互相嵌套”，不可能真正同时跑。</li>
+      <li><span class="tag2">嵌套是怎么开的</span>：进 ISR 时硬件自动把当前优先级 CCPN 设为该中断的优先级（挡住同级/低级），而你的 ISR 第一行 <code>interrupt_global_enable(0)</code> 把 CCPN 清零 → 门全开，任何 pending 的中断都能立刻抢占当前 ISR。</li>
+      <li>5ms 与 10ms 在 <span class="warn">0 / 10 / 20 / 30 / 40ms 碰撞</span>：此时两个请求同时 pending，硬件按优先级仲裁（TriCore 数值越大越优先，具体取 <code>CCU6_0_CH0_ISR_PRIORITY</code> / <code>CH1_ISR_PRIORITY</code> 的值）——高优先级先进门，低优先级随即嵌套进去先跑完，高优先级再收尾。观察上二者是“你插我、我插你”地串行完成。</li>
+      <li>两个坑：① CH0 写编码器数据、CH1 读编码器数据做 PID，嵌套抢占时多字节结构体可能读到中间状态（32 位对齐变量在 TriCore 上读写原子，一般没事）；② 碰撞时刻 CH0 的扫描/启动耗时若太长，会把 CH1 的 10ms PID 节拍挤变形 → 控制周期抖动。惯例：<b>控制环（PID）优先级 &gt; 扫描/杂务优先级</b>，ISR 里不干耗时活。</li>
+    </ul>
+    <div class="alt">
+      <b>想要真正的“同时”（并行）</b>：TC264 是双核，把其中一个 ISR 的核 ID 改成 1，如 <code>IFX_INTERRUPT(cc60_pit_ch1_isr, 1, CCU6_0_CH1_ISR_PRIORITY)</code> → 两个 ISR 各占一核真并行。代价：共享变量需核间互斥（临界区/原子操作），外设中断要配到对应核。<b>结论</b>：你现在的 5ms 扫描 + 10ms 控制写法，单核 + 嵌套完全够用，多数智能车代码就是这么写的。
+    </div>
+  </div>
+</div>
+</body>
+</html>

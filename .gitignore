@@ -1,0 +1,25 @@
+# Eclipse / AURIX Development Studio workspace data
+.metadata/
+Debug/
+Release/
+
+# Build outputs
+*.o
+*.obj
+*.d
+*.elf
+*.hex
+*.map
+*.su
+
+# Temporary and editor files
+*.tmp
+*.bak
+*.garbled.bak
+~$*
+.DS_Store
+Thumbs.db
+.build/
+*.inspect.ndjson
+.vscode/
+.idea/

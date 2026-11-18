@@ -1,0 +1,226 @@
+<html style="margin:0;padding:0;">
+<title>霹雳火2026 模糊PID增益调度规则表</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Microsoft YaHei',system-ui,sans-serif;background:#f6f8fb;padding:16px;color:#1f2733;">
+
+  <div style="text-align:center;margin-bottom:12px;">
+    <div style="font-size:20px;font-weight:700;">霹雳火2026 · 模糊PID增益调度规则表（示意）</div>
+    <div style="font-size:13px;color:#5b6b7b;margin-top:4px;">输入 (偏差E, 偏差变化率EC) → 查 7×7 规则表 → 输出"基础Kp/Kd × 系数"。蓝色=收缩增益，橙红=放大增益。</div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;">
+
+    <!-- P 规则表 -->
+    <div style="background:#fff;border:1.5px solid #c9d4e3;border-radius:10px;padding:12px;">
+      <div style="font-weight:700;font-size:15px;margin-bottom:8px;text-align:center;">P 增益系数（基础Kp × 系数）<br/><span style="font-weight:400;font-size:12px;color:#5b6b7b;">范围 0.90 ~ 1.30 · RULE_P × PCT_P</span></div>
+      <table style="border-collapse:collapse;font-size:13px;">
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;">E↓ EC→</td>
+          <td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">NB</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">NM</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">NS</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">ZO</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">PS</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">PM</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">PB</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">NB</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.30</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.20</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.90</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">NM</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.20</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.90</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">NS</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.90</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">ZO</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.90</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">PS</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.90</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">PM</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.90</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.20</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">PB</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.90</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.95</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.00</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.20</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.30</td>
+        </tr>
+      </table>
+      <div style="font-size:12px;color:#5b6b7b;margin-top:6px;text-align:center;">主对角线（入弯）放大到 1.30；副对角线（出弯回正）缩到 0.90</div>
+    </div>
+
+    <!-- D 规则表 -->
+    <div style="background:#fff;border:1.5px solid #c9d4e3;border-radius:10px;padding:12px;">
+      <div style="font-weight:700;font-size:15px;margin-bottom:8px;text-align:center;">D 增益系数（基础Kd × 系数）<br/><span style="font-weight:400;font-size:12px;color:#5b6b7b;">范围 0.85 ~ 1.35 · RULE_D × PCT_D</span></div>
+      <table style="border-collapse:collapse;font-size:13px;">
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;">E↓ EC→</td>
+          <td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">NB</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">NM</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">NS</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">ZO</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">PS</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">PM</td><td style="padding:2px;text-align:center;color:#5b6b7b;font-size:12px;">PB</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">NB</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.85</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.92</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.98</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.35</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">NM</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.92</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.98</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.35</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">NS</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.98</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.35</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">ZO</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.35</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">PS</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.35</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.98</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">PM</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.35</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.98</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.92</td>
+        </tr>
+        <tr>
+          <td style="padding:2px;font-weight:700;color:#5b6b7b;font-size:12px;">PB</td>
+          <td style="background:#c2410c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.35</td>
+          <td style="background:#f97316;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.18</td>
+          <td style="background:#fb923c;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.10</td>
+          <td style="background:#38bdf8;color:#fff;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">1.03</td>
+          <td style="background:#7dd3fc;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.98</td>
+          <td style="background:#bae6fd;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.92</td>
+          <td style="background:#e0f2fe;color:#1e3a5f;text-align:center;font-weight:700;border-radius:4px;padding:5px 4px;">0.85</td>
+        </tr>
+      </table>
+      <div style="font-size:12px;color:#5b6b7b;margin-top:6px;text-align:center;">中心（直道）放大到 1.35 阻尼最足；对角（入弯）缩到 0.85 放开响应</div>
+    </div>
+  </div>
+
+  <!-- 推理流水线 -->
+  <div style="margin-top:14px;background:#fff;border:1.5px solid #c9d4e3;border-radius:10px;padding:12px;">
+    <div style="font-weight:700;font-size:15px;margin-bottom:8px;text-align:center;">单次推理流水线（每 10ms 执行一次）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;">
+      <div style="background:#eaf2fb;border:1px solid #3a7bd5;border-radius:6px;padding:6px 10px;font-size:14px;text-align:center;">输入 E, EC<br/><span style="font-size:12px;color:#5b6b7b;">偏差 / 变化率</span></div>
+      <div style="font-size:16px;color:#3a7bd5;">→</div>
+      <div style="background:#eaf2fb;border:1px solid #3a7bd5;border-radius:6px;padding:6px 10px;font-size:14px;text-align:center;">限幅<br/><span style="font-size:12px;color:#5b6b7b;">E±16 / EC±6</span></div>
+      <div style="font-size:16px;color:#3a7bd5;">→</div>
+      <div style="background:#eaf2fb;border:1px solid #3a7bd5;border-radius:6px;padding:6px 10px;font-size:14px;text-align:center;">索引 0~6<br/><span style="font-size:12px;color:#5b6b7b;">O(1) 查表</span></div>
+      <div style="font-size:16px;color:#3a7bd5;">→</div>
+      <div style="background:#eaf2fb;border:1px solid #3a7bd5;border-radius:6px;padding:6px 10px;font-size:14px;text-align:center;">激活 4 规则<br/><span style="font-size:12px;color:#5b6b7b;">相邻语言值</span></div>
+      <div style="font-size:16px;color:#3a7bd5;">→</div>
+      <div style="background:#eaf2fb;border:1px solid #3a7bd5;border-radius:6px;padding:6px 10px;font-size:14px;text-align:center;">隶属度 μ<br/><span style="font-size:12px;color:#5b6b7b;">三角插值</span></div>
+      <div style="font-size:16px;color:#3a7bd5;">→</div>
+      <div style="background:#eaf2fb;border:1px solid #3a7bd5;border-radius:6px;padding:6px 10px;font-size:14px;text-align:center;">取小 AND<br/><span style="font-size:12px;color:#5b6b7b;">激活强度</span></div>
+      <div style="font-size:16px;color:#3a7bd5;">→</div>
+      <div style="background:#eaf2fb;border:1px solid #3a7bd5;border-radius:6px;padding:6px 10px;font-size:14px;text-align:center;">加权平均<br/><span style="font-size:12px;color:#5b6b7b;">解模糊</span></div>
+      <div style="font-size:16px;color:#3a7bd5;">→</div>
+      <div style="background:#fff7e6;border:1.5px solid #e8a020;border-radius:6px;padding:6px 10px;font-size:14px;text-align:center;font-weight:700;">Kp/Kd 系数<br/><span style="font-size:12px;font-weight:400;">基础值 × 系数</span></div>
+    </div>
+  </div>
+
+  <!-- 三组工况 -->
+  <div style="margin-top:12px;background:#fff;border:1.5px solid #c9d4e3;border-radius:10px;padding:12px;">
+    <div style="font-weight:700;font-size:15px;margin-bottom:8px;text-align:center;">三组典型工况（基础 Kp=1.52 / Kd=10.4 手算复现）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+      <div style="flex:1 1 200px;min-width:180px;background:#e0f2fe;border-radius:8px;padding:10px;text-align:center;">
+        <div style="font-weight:700;">直道稳态</div>
+        <div style="font-size:13px;color:#5b6b7b;">E=0 · EC=0</div>
+        <div style="font-size:16px;margin-top:4px;">P × <b>0.90</b>　D × <b>1.35</b></div>
+        <div style="font-size:12px;color:#5b6b7b;">小 P 大 D：稳、不抖</div>
+      </div>
+      <div style="flex:1 1 200px;min-width:180px;background:#fff7e6;border-radius:8px;padding:10px;text-align:center;">
+        <div style="font-weight:700;">中等偏差·增大</div>
+        <div style="font-size:13px;color:#5b6b7b;">E=6 · EC=2</div>
+        <div style="font-size:16px;margin-top:4px;">P × <b>1.07</b>　D × <b>1.00</b></div>
+        <div style="font-size:12px;color:#5b6b7b;">P 增、D 平：正常跟随</div>
+      </div>
+      <div style="flex:1 1 200px;min-width:180px;background:#fee2e2;border-radius:8px;padding:10px;text-align:center;">
+        <div style="font-weight:700;">急弯入弯</div>
+        <div style="font-size:13px;color:#5b6b7b;">E=14 · EC=5</div>
+        <div style="font-size:16px;margin-top:4px;">P × <b>1.23</b>　D × <b>0.90</b></div>
+        <div style="font-size:12px;color:#5b6b7b;">大 P 小 D：敢打方向</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;color:#8a97a5;margin-top:10px;text-align:center;">数值取自 FuzzyPID.cpp 当前生效 PCT 表与 RULE_P/RULE_D 规则表；手算为加权平均结果。示意结构，非精确测量。</div>
+</div>
+</html>
